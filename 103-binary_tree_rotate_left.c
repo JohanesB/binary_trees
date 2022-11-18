@@ -1,24 +1,34 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_node - Create a binary node
- * @parent: node parent
- * @value: Value of the node
- * Return: the new node
+ * binary_tree_rotate_left - Left-rotates a binary tree.
+ * @tree: A pointer to the root node of the tree to rotate.
+ *
+ * Return: A pointer to the new root node after rotation.
  */
-
-binary_tree_t *binary_tree_node(binary_tree_t *parent, int value)
+binary_tree_t *binary_tree_rotate_left(binary_tree_t *tree)
 {
-	binary_tree_t *new_node;
+	binary_tree_t *pivot, *tmp;
 
-	new_node = malloc(sizeof(binary_tree_t));
-	if (new_node == NULL)
-	{
+	if (tree == NULL || tree->right == NULL)
 		return (NULL);
+
+	pivot = tree->right;
+	tmp = pivot->left;
+	pivot->left = tree;
+	tree->right = tmp;
+	if (tmp != NULL)
+		tmp->parent = tree;
+	tmp = tree->parent;
+	tree->parent = pivot;
+	pivot->parent = tmp;
+	if (tmp != NULL)
+	{
+		if (tmp->left == tree)
+			tmp->left = pivot;
+		else
+			tmp->right = pivot;
 	}
-	new_node->n = value;
-	new_node->parent = parent;
-	new_node->left = NULL;
-	new_node->right = NULL;
-	return (new_node);
+
+	return (pivot);
 }
